@@ -6,3 +6,6 @@ class DeviceReadings(models.Model):
     tstz = models.DateTimeField()       #timestamp timezone aka. YYYY-MM-DD HH:MM:SS.SSS for then the reading was taken
     deviceId = models.IntegerField()    #ID of the device that took the readings
     waterLevel = models.FloatField()    #level of the water measured from the device
+
+    def __str__(self):
+        return f"Reading: {self.tstz}"
