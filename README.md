@@ -1,5 +1,5 @@
 # How to use
-1) First create virtual environemt for the api using this command: `"python -m venv .venv"` (can change .venv to any other preferd name for the virtual environment, but don't forget to change .gitignore to ignore the virtual environment)
+1) First create virtual environemt for the api using this command: `"python3 -m venv .venv"` (can change .venv to any other preferd name for the virtual environment, but don't forget to change .gitignore to ignore the virtual environment)
 2) Using bash, activate virtual environment for the api using this command: `". <nameOfTheEnvironment>/bin/activate"`. Now everything you do is in virtual environment and no extra libraries are downloaded to your global python libraries.
 3) Using the **requirements.txt** (list of all dependencies used for the project) install them in the virtual environment with this command: `"python -m pip install -r requirements.txt"`
 4) If there are problems run "python manage.py migrate" this should fix problems with realocaing code or running it on a nother machine if there are any
