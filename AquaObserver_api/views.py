@@ -4,11 +4,11 @@ from django.http import JsonResponse
 from .models import DeviceReadings
 from .serializers import ReadingSerializer
 
-#defined readings endpoint aka. /readings
-def readings(request):
+#defined readings endpoint aka. /readings/
+def readingsList(request):
     #get all the readings
-    readingsList = DeviceReadings.objects.all()
+    retrievedReadings = DeviceReadings.objects.all()
     #serialize readings
-    serializer = ReadingSerializer(readingsList, many=True)
+    serializer = ReadingSerializer(retrievedReadings, many=True)
     #return json
     return JsonResponse(serializer.data)
