@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.db import models
+from pytz import timezone
 
 #defining a model of data that will be stored in the database aka. defining the table
 class DeviceReadings(models.Model):
@@ -8,4 +10,5 @@ class DeviceReadings(models.Model):
     waterLevel = models.FloatField()    #level of the water measured from the device
 
     def __str__(self):
-        return f"Reading: {self.tstz}"
+        localTime = self.tstz.astimezone(timezone("Europe/Zagreb"))
+        return f"Reading: {self.tstz.date()}:{localTime.time().strftime('%H:%M:%S')}"
