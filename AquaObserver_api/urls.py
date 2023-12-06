@@ -21,5 +21,5 @@ from AquaObserver_api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('readings/', views.readingsList),
-    path('daily/', views.getDailyValues)
+    path('dailyLatest/', views.getLatestDaily)
 ]
