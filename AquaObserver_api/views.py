@@ -1,5 +1,6 @@
 #for defining endpoints
-
+import json
+from django.db.models import Q
 from django.http import JsonResponse
 from .models import DeviceReadings
 from .serializers import ReadingSerializer
@@ -26,6 +27,13 @@ def readingsList(request):
             serializer.save()       #saves it to the DB
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-#define daily readings endpoint aka daily/
-def getDailyValues(request):
-    return
+#define latest daily reading endpoint aka dailyLatest/
+def getLatestDaily(request):
+    if request.method == 'GET':
+        requestedDate = json.loads(request.body).get('date')
+        try:
+            lastReading = DeviceReadings.objects.filter(Q(tstz__startswith=requestedDate)).latest('tstz')
+        except DeviceReadings.DoesNotExist:
+            return JsonResponse({"waterLevel": -1}) #in case there is no record in database
+    return JsonResponse({"waterLevel": lastReading.waterLevel})
+    
