@@ -9,6 +9,7 @@ from .serializers import ThresholdSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
 
 #defined readings endpoint aka readings/
 @api_view(['GET','POST'])
@@ -30,8 +31,9 @@ def readingsList(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 #define latest daily reading endpoint aka dailyLatest/
+@csrf_exempt
 def getLatestDaily(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         requestedDate = json.loads(request.body).get('date')    #from JSON get value from filed "data":
         try:
             lastReading = DeviceReadings.objects.filter(Q(tstz__startswith=requestedDate)).latest('tstz')   #would translate to query: Select * from DeviceReadings where tstz like "<requestedDate>%" and gets the latest reading
