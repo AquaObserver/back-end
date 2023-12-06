@@ -11,3 +11,8 @@ class DeviceReadings(models.Model):
     def __str__(self):
         localTime = self.tstz.astimezone(timezone("Europe/Zagreb"))
         return f"Reading: {self.tstz.date()}:{localTime.time().strftime('%H:%M:%S')}"
+
+
+class UserThreshold(models.Model):
+    userId = models.IntegerField()          #id of the user
+    thresholdLevel = models.FloatField()    #defined threshold by user
