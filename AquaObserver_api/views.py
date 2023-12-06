@@ -32,7 +32,7 @@ def getLatestDaily(request):
     if request.method == 'GET':
         requestedDate = json.loads(request.body).get('date')
         try:
-            lastReading = DeviceReadings.objects.filter(Q(tstz__startswith=requestedDate)).latest('tstz')
+            lastReading = DeviceReadings.objects.filter(Q(tstz__startswith=requestedDate)).latest('tstz')   #would translate to query: Select * from DeviceReadings where tstz like "<requestedDate>%" and gets the latest reading
         except DeviceReadings.DoesNotExist:
             return JsonResponse({"waterLevel": -1}) #in case there is no record in database
     return JsonResponse({"waterLevel": lastReading.waterLevel})
