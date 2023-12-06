@@ -25,3 +25,7 @@ def readingsList(request):
         if serializer.is_valid():
             serializer.save()       #saves it to the DB
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#define daily readings endpoint aka daily/
+def getDailyValues(request):
+    return
