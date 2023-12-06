@@ -50,8 +50,8 @@ def userThreshold(request, userID=None):
         try:
             user = UserThreshold.objects.get(userId=userID)
         except UserThreshold.DoesNotExist:
-            return JsonResponse({"user": None, "threhsold": -1})
-        return JsonResponse({"user": user.userId, "threhsold": user.thresholdLevel})
+            return JsonResponse({"user": None, "threshold": -1})
+        return JsonResponse({"user": user.userId, "threshold": user.thresholdLevel})
 
     if request.method == 'POST':
         serializer = ThresholdSerializer(data=request.data)
