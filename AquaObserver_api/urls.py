@@ -21,6 +21,7 @@ from AquaObserver_api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('readings/', views.readingsList),
+    path('readings/<str:dayDate>', views.readingsList),
     path('dailyLatest/', views.getLatestDaily),
     path('userThreshold/<int:userID>', views.userThreshold),
     path('userThreshold/', views.userThreshold)

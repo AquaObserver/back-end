@@ -1,4 +1,5 @@
 #for defining endpoints
+from datetime import datetime
 import json
 from django.db.models import Q
 from django.http import JsonResponse
@@ -13,16 +14,31 @@ from django.views.decorators.csrf import csrf_exempt
 
 #defined readings endpoint aka readings/
 @api_view(['GET','POST'])
-def readingsList(request):
-
+def readingsList(request, dayDate = None):
     #front-end is retreiving data
     if request.method == 'GET':
-        #get all the readings
-        retrievedReadings = DeviceReadings.objects.all()
-        #serialize readings
-        serializer = ReadingSerializer(retrievedReadings, many=True)
-        #return json
-        return JsonResponse({"readings": serializer.data})
+        if dayDate is not None:
+            dataJSON = {
+                "data":[]
+            }
+            try:
+                readingsOfTheDay = DeviceReadings.objects.filter(Q(tstz__startswith=dayDate))
+                serializer = ReadingSerializer(readingsOfTheDay, many = True)
+            except:
+                return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #print("BALBLALBLB:", list(serializer.data[0].items()))
+            for d in serializer.data:
+                dData = dict(d.items())
+                dataJSON["data"].append((dData.get('tstz'), dData.get('waterLevel')))
+            print(dataJSON)
+            return JsonResponse(dataJSON)
+        else:
+            #get all the readings
+            retrievedReadings = DeviceReadings.objects.all()
+            #serialize readings
+            serializer = ReadingSerializer(retrievedReadings, many=True)
+            #return json
+            return JsonResponse({"readings": serializer.data})
     #hardware is sending data
     if request.method == 'POST':
         serializer = ReadingSerializer(data=request.data)
@@ -34,7 +50,7 @@ def readingsList(request):
 @csrf_exempt
 def getLatestDaily(request):
     if request.method == 'POST':
-        requestedDate = json.loads(request.body).get('date')    #from JSON get value from filed "data":
+        requestedDate = json.loads(request.body).get('date')    #from JSON get value from filed "date":
         try:
             lastReading = DeviceReadings.objects.filter(Q(tstz__startswith=requestedDate)).latest('tstz')   #would translate to query: Select * from DeviceReadings where tstz like "<requestedDate>%" and gets the latest reading
         except DeviceReadings.DoesNotExist:
