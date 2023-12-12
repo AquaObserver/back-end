@@ -1,6 +1,5 @@
 #for defining endpoints
-from datetime import datetime
-import json
+
 from django.db.models import Q
 from django.http import JsonResponse
 from .models import DeviceReadings
@@ -26,10 +25,10 @@ def readingsList(request, dayDate = None):
                 serializer = ReadingSerializer(readingsOfTheDay, many = True)
             except:
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            #print("BALBLALBLB:", list(serializer.data[0].items()))
             for d in serializer.data:
                 dData = dict(d.items())
-                dataJSON["data"].append((dData.get('tstz'), dData.get('waterLevel')))
+                extractedTime = dData.get('tstz').split('T')[1].split('+')[0]    #gets the time from string that represents DateTime object
+                dataJSON["data"].append({"time": extractedTime, "waterLevel": dData.get('waterLevel')})
             print(dataJSON)
             return JsonResponse(dataJSON)
         else:
