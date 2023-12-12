@@ -1,5 +1,6 @@
 #for defining endpoints
 
+import json
 from django.db.models import Q
 from django.http import JsonResponse
 from .models import DeviceReadings
