@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('readings/', views.readingsList),
     path('readings/<str:dayDate>', views.readingsList),
+    path('readingsRange/<str:dateRange>', views.readingsRange),
     path('dailyLatest/', views.getLatestDaily),
     path('userThreshold/<int:userID>', views.userThreshold),
     path('userThreshold/', views.userThreshold)

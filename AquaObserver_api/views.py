@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 def readingsList(request, dayDate = None):
     #front-end is retreiving data
     if request.method == 'GET':
-        if dayDate is not None:
+        if (dayDate is not None):
             dataJSON = {
                 "data":[]
             }
@@ -30,7 +30,7 @@ def readingsList(request, dayDate = None):
                 dData = dict(d.items())
                 extractedTime = dData.get('tstz').split('T')[1].split('+')[0]    #gets the time from string that represents DateTime object
                 dataJSON["data"].append({"time": extractedTime, "waterLevel": dData.get('waterLevel')})
-            print(dataJSON)
+            #print(dataJSON)
             return JsonResponse(dataJSON)
         else:
             #get all the readings
@@ -85,3 +85,14 @@ def userThreshold(request, userID=None):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
+def readingsRange(request, dateRange):
+    if (request.method == 'GET'):
+        #print(dateRange)
+        dateStart = dateRange.split(':')[0]
+        dateEnd = dateRange.split(':')[1]
+        print("QUErYYYY:", DeviceReadings.objects.filter(Q(tstz__range=(dateStart, dateEnd))).query)
+        readingsInRange = DeviceReadings.objects.filter(Q(tstz__range=(dateStart, dateEnd)))
+        serializer = ReadingSerializer(readingsInRange, many=True)
+        print("DATAAAAA: ", serializer.data)
