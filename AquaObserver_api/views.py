@@ -1,5 +1,6 @@
 #for defining endpoints
 
+import datetime
 import json
 from django.db.models import Q
 from django.http import JsonResponse
@@ -11,6 +12,32 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+
+#increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns data for 2023-12-06)
+def fixDBDateInterpretation(date):
+    tempStart = date.split(':')[0]
+    tempEnd = date.split(':')[1]
+    dateObjStart = datetime.date.fromisoformat(tempStart)
+    dateObjEnd = datetime.date.fromisoformat(tempEnd)
+    return [str(dateObjStart), str(dateObjEnd + datetime.timedelta(days=1))]
+
+#MWLD = Mean Water Level per Day
+def calculateMWLD(serializedData):
+    meanValue = dict()
+    #populate dict with dates as keys and mean values of each day
+    for sD in serializedData:   # goes through list of records and adds distinct date as a key in dictionary
+        dateAsKey = dict(sD.items()).get('tstz').split('T')[0]
+        if dateAsKey not in list(meanValue.keys()):
+            tempValue = 0
+            countedValues = 0
+            for subData in serializedData:  #for each entry with same date as current key, calculate mean waterLevel for current date
+                sameDate = dict(subData.items()).get('tstz').split('T')[0]
+                if sameDate == dateAsKey:
+                    tempValue += float(dict(subData.items()).get('waterLevel'))
+                    countedValues += 1
+            meanValue[str(dateAsKey)] = tempValue/countedValues
+    return meanValue
+
 
 #defined readings endpoint aka readings/
 @api_view(['GET','POST'])
@@ -88,11 +115,16 @@ def userThreshold(request, userID=None):
         
 
 def readingsRange(request, dateRange):
+    dataJSON = {"data":[]}
     if (request.method == 'GET'):
-        #print(dateRange)
-        dateStart = dateRange.split(':')[0]
-        dateEnd = dateRange.split(':')[1]
-        print("QUErYYYY:", DeviceReadings.objects.filter(Q(tstz__range=(dateStart, dateEnd))).query)
+        dates = fixDBDateInterpretation(dateRange)
+        dateStart = dates[0]
+        dateEnd = dates[1]
         readingsInRange = DeviceReadings.objects.filter(Q(tstz__range=(dateStart, dateEnd)))
         serializer = ReadingSerializer(readingsInRange, many=True)
-        print("DATAAAAA: ", serializer.data)
+        calculatedvalues = calculateMWLD(serializer.data) 
+        for dateKey in calculatedvalues.keys():
+            dataJSON["data"].append({"date": dateKey, "meanValue": calculatedvalues.get(dateKey)})
+        return JsonResponse(dataJSON)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
