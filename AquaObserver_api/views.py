@@ -13,13 +13,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 
-#increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns data for 2023-12-06)
+#increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns all data for 2023-12-06 till 23:59:59)
 def fixDBDateInterpretation(date):
     tempStart = date.split(':')[0]
-    tempEnd = date.split(':')[1]
+    tempEnd = date.split(':')[1] + 'T23:59:59'
     dateObjStart = datetime.date.fromisoformat(tempStart)
-    dateObjEnd = datetime.date.fromisoformat(tempEnd)
-    return [str(dateObjStart), str(dateObjEnd + datetime.timedelta(days=1))]
+    dateObjEnd = datetime.datetime.strptime(tempEnd, '%Y-%m-%dT%H:%M:%S')
+    return [str(dateObjStart), str(dateObjEnd)]
 
 #MWLD = Mean Water Level per Day
 def calculateMWLD(serializedData):
