@@ -86,34 +86,26 @@ def getLatestDaily(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     return JsonResponse({"waterLevel": lastReading.waterLevel})
 
-#defined userThreshold endpoint aka userThreshold/ or userThreshold/<int:userID>
-@api_view(['GET', 'POST', 'PUT'])
-def userThreshold(request, userID=None):
+#defined userThreshold endpoint aka userThreshold/
+@api_view(['GET', 'POST'])
+def userThreshold(request): #gets the application defined userThreshold
     if request.method == 'GET':
         try:
-            user = UserThreshold.objects.get(userId=userID)
+            rData = UserThreshold.objects.get(id = 3)
         except UserThreshold.DoesNotExist:
-            return JsonResponse({"user": None, "threshold": -1})
-        return JsonResponse({"user": user.userId, "threshold": user.thresholdLevel})
-
-    if request.method == 'POST':
-        serializer = ThresholdSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return JsonResponse({"threshold": -1})
+        return JsonResponse({"threshold": rData.thresholdLevel})
     
-    if request.method == 'PUT':
+    if request.method == 'POST':    # updates the application userThreshold
+        newThrasholdValue = json.loads(request.body).get('thresholdLevel')
         try:
-            user = UserThreshold.objects.get(userId=userID)
-            user.delete()
+            rData = UserThreshold.objects.get(id = 3)
         except UserThreshold.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = ThresholdSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        rData.thresholdLevel = newThrasholdValue
+        rData.save()
+        return Response(rData.thresholdLevel, status=status.HTTP_200_OK)
         
-
 def readingsRange(request, dateRange):
     dataJSON = {"data":[]}
     if (request.method == 'GET'):

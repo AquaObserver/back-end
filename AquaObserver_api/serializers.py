@@ -12,4 +12,4 @@ class ReadingSerializer(serializers.ModelSerializer):
 class ThresholdSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserThreshold
-        fields = ['id', 'userId', 'thresholdLevel']
+        fields = ['id', 'thresholdLevel']

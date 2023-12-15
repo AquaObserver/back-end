@@ -14,5 +14,4 @@ class DeviceReadings(models.Model):
 
 
 class UserThreshold(models.Model):
-    userId = models.IntegerField()          #id of the user
-    thresholdLevel = models.FloatField()    #defined threshold by user
+    thresholdLevel = models.FloatField()    #defined threshold by applicaiton
