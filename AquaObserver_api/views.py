@@ -101,7 +101,7 @@ def userThreshold(request): #gets the application defined userThreshold
         try:
             rData = UserThreshold.objects.get(id = 3)
         except UserThreshold.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         rData.thresholdLevel = newThrasholdValue
         rData.save()
         return Response(rData.thresholdLevel, status=status.HTTP_200_OK)
@@ -118,5 +118,16 @@ def readingsRange(request, dateRange):
         for dateKey in calculatedvalues.keys():
             dataJSON["data"].append({"date": dateKey, "meanValue": calculatedvalues.get(dateKey)})
         return JsonResponse(dataJSON)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+def lastReading(request):
+    if (request.method == 'GET'):
+        try:
+            lastCreatedReading = DeviceReadings.objects.last()
+            serializer = ReadingSerializer(lastCreatedReading)
+        except DeviceReadings.DoesNotExist:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return JsonResponse(serializer.data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
