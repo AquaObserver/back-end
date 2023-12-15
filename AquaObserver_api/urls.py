@@ -20,9 +20,9 @@ from AquaObserver_api import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('readings/', views.readingsList),
-    path('readings/<str:dayDate>', views.readingsList),
+    path('readings/', views.readingsList),  #can be GET or POST, GET retrieves all data in DB, POST expects this JSON {"tstz": "YYYY-MM-DDTHH:MM:SS", "deviceId": <integer>, "waterLevel": <float value>}
+    path('readings/<str:dayDate>', views.readingsList), #GET; if there is a date specified in URL, like readings/YYYY-MM-DD, then all readings since 00:00:00 till 23:58:00 of that day are retrieved
     path('readingsRange/<str:dateRange>', views.readingsRange), #dateRange should be in format readingsRange/dateStart:dateEnd
-    path('dailyLatest/', views.getLatestDaily),
-    path('userThreshold/', views.userThreshold) #depends on method is it GET or POST, but same route for GET and POST calls
+    path('dailyLatest/', views.getLatestDaily), # POST method, expects this JSON {"date": YYYY-MM-DD}
+    path('userThreshold/', views.userThreshold) #depends on method is it GET or POST, but same route for GET and POST calls, POST body expects this JSON {"thresholdLevel": <float value>}
 ]
