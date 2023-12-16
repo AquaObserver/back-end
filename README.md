@@ -9,3 +9,6 @@
 
 # TODO
 For now we only have an API. Need to implement back-end for notifying user about water level reaching defined treshold.
+
+# If u get error no such table run this command
+ python manage.py migrate --run-syncdb
