@@ -20,6 +20,8 @@ class DeviceReadings(models.Model):
 class UserThreshold(models.Model):
     thresholdLevel = models.IntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
+    def __str__(self):
+        return f"Threshold: {self.thresholdLevel}%"
 
 @receiver(post_save, sender=UserThreshold)
 def user_threshold_post_save(sender, instance, created, **kwargs):
