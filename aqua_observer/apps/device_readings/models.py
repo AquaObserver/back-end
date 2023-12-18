@@ -1,16 +1,25 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from pytz import timezone
 
 
-# defining a model of data that will be stored in the database aka. defining the table
-
-
 class DeviceReadings(models.Model):
-    tstz = models.DateTimeField(
-        auto_now=True)  # timestamp timezone aka YYYY-MM-DD HH:MM:SS.SSS for then the reading was taken
-    deviceId = models.IntegerField()  # ID of the device that took the readings
-    waterLevel = models.FloatField()  # level of the water measured from the device
+    tstz = models.DateTimeField(auto_now=True)
+    deviceId = models.IntegerField()
+    waterLevel = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     def __str__(self):
         localTime = self.tstz.astimezone(timezone("Europe/Zagreb"))
         return f"Reading: {self.tstz.date()}:{localTime.time().strftime('%H:%M:%S')}"
+
+
+class UserThreshold(models.Model):
+    thresholdLevel = models.IntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+
+@receiver(post_save, sender=UserThreshold)
+def user_threshold_post_save(sender, instance, created, **kwargs):
+    from aqua_observer.broker import client
+    client.publish("aqua1/critLvl", int(instance.thresholdLevel))
