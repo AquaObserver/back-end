@@ -14,12 +14,15 @@ INSTALLED_APPS = [
     'aqua_observer.apps.device_readings',
     'rest_framework',
     'corsheaders',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jet.dashboard',
+    'jet',
+    'django.contrib.admin',
+
 ]
 
 MIDDLEWARE = [
