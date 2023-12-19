@@ -177,7 +177,13 @@ def lastReading(request):
 def registerDevice(request):
     req_token = json.loads(request.body).get('token')
     if (request.method == "POST"):
-        tokenObject = DeviceToken.objects.create(dToken=req_token)
-        tokenObject.save()
-        return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
+        print("QUERY: ", DeviceToken.objects.filter(Q(dToken=req_token)).query)
+        doesExist = DeviceToken.objects.filter(Q(dToken=req_token))
+        #print("BLBALABLLBA: ", doesExist[0].dToken)
+        if doesExist[0].dToken != req_token:
+            tokenObject = DeviceToken.objects.create(dToken=req_token)
+            tokenObject.save()
+            return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"msg": "Token already exists"}, status=status.HTTP_409_CONFLICT)
 
