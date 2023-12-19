@@ -9,6 +9,8 @@ urlpatterns = [
     path('dailyLatest/', views.getLatestDaily),  # POST method, expects this JSON {"date": YYYY-MM-DD}
     path('userThreshold/', views.userThreshold),
     path('getLatest/', views.lastReading),
+    path('registerDevice/', views.registerDevice),
+    path('test/', views.notifyDevices),
     path(r'jet/', include('jet.urls', 'jet')),
     path(r'jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),

@@ -23,6 +23,13 @@ class UserThreshold(models.Model):
     def __str__(self):
         return f"Threshold: {self.thresholdLevel}%"
 
+class DeviceToken(models.Model):
+    dToken = models.CharField(max_length = 200)
+
+    def __str__(self):
+        return f"Token: {self.dToken[0:10]}"
+
+
 @receiver(post_save, sender=UserThreshold)
 def user_threshold_post_save(sender, instance, created, **kwargs):
     from aqua_observer.broker import client

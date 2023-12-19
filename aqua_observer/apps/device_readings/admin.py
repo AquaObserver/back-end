@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from aqua_observer.broker import client
-from .models import DeviceReadings, UserThreshold
+from .models import DeviceReadings, UserThreshold, DeviceToken
 
 
 class DeviceReadingsAdmin(admin.ModelAdmin):
@@ -16,3 +16,4 @@ class DeviceReadingsAdmin(admin.ModelAdmin):
 
 admin.site.register(DeviceReadings, DeviceReadingsAdmin)
 admin.site.register(UserThreshold)
+admin.site.register(DeviceToken)

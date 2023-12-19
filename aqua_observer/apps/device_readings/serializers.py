@@ -1,7 +1,6 @@
 #for transforming python objects to JSON
 from rest_framework import serializers
-from .models import DeviceReadings
-from .models import UserThreshold
+from .models import DeviceReadings, UserThreshold, DeviceToken
 
 
 class ReadingSerializer(serializers.ModelSerializer):
@@ -13,3 +12,8 @@ class ThresholdSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserThreshold
         fields = ['id', 'thresholdLevel']
+
+class DeviceTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceToken
+        fields = ['id', 'dToken']

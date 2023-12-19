@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import os
 
 from django.db.models import Q
 from django.http import JsonResponse
@@ -10,10 +11,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import DeviceReadings
-from .models import UserThreshold
-from .serializers import ReadingSerializer
+from .models import DeviceReadings, UserThreshold, DeviceToken
+from .serializers import ReadingSerializer, DeviceTokenSerializer
 
+import requests
+import google.auth.transport.requests
+from google.oauth2 import service_account
 
 # increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns all data for 2023-12-06 till 23:59:59)
 def fixDBDateInterpretation(date):
@@ -41,6 +44,39 @@ def calculateMWLD(serializedData):
             meanValue[str(dateAsKey)] = tempValue / countedValues
     return meanValue
 
+def _get_access_token():
+    credentials = service_account.Credentials.from_service_account_file('firebase_config.json',
+        scopes=[
+            'https://www.googleapis.com/auth/firebase.messaging'
+        ]
+    )
+    request = google.auth.transport.requests.Request()
+    credentials.refresh(request)
+    return credentials.token
+
+def _send_notification_new_api(deviceToken: str, title: str = "Upozorenje", msg: str = "Dosegnuta kritična razina"):
+    token = _get_access_token()
+    url = 'https://fcm.googleapis.com/v1/projects/aquaobserver-49185/messages:send'
+    headers = {
+        'Authorization': 'Bearer ' + token,
+    }
+    body = {
+        "message": {
+            "token": deviceToken,
+            "notification": {
+                "body": msg,
+                "title": title
+            }
+        }
+    }
+    response = requests.post(url, headers=headers, json=body)
+    return response.json()
+
+def notifyDevices(request):
+    getTokens = DeviceToken.objects.all()
+    serializer = DeviceTokenSerializer(getTokens, many=True)
+    for sd in serializer.data:
+        _send_notification_new_api(str(dict(sd.items()).get('dToken')))
 
 # defined readings endpoint aka readings/
 @api_view(['GET', 'POST'])
@@ -61,20 +97,14 @@ def readingsList(request, dayDate=None):
                 extractedTime = dData.get('tstz').split('T')[1].split('+')[
                     0]  # gets the time from string that represents DateTime object
                 dataJSON["data"].append({"time": extractedTime, "waterLevel": dData.get('waterLevel')})
-            # print(dataJSON)
             return JsonResponse(dataJSON)
         else:
-            # get all the readings
             retrievedReadings = DeviceReadings.objects.all()
-            # serialize readings
             serializer = ReadingSerializer(retrievedReadings, many=True)
-            # return json
             return JsonResponse({"readings": serializer.data})
     # hardware is sending data
     if request.method == 'POST':
-        print("NOW:", datetime.datetime.now())
         serializer = ReadingSerializer(data=request.data)
-        #print("Serializer DATA: ", serializer)
         if serializer.is_valid():
             serializer.save()  # saves it to the DB
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -142,3 +172,12 @@ def lastReading(request):
         return JsonResponse(serializer.data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def registerDevice(request):
+    req_token = json.loads(request.body).get('token')
+    if (request.method == "POST"):
+        tokenObject = DeviceToken.objects.create(dToken=req_token)
+        tokenObject.save()
+        return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
+

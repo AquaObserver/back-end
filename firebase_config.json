@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "aquaobserver-49185",
+  "private_key_id": "fefc47a504242798ed279b891e3735ba1c4d6783",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDf7GHd3pgtTfMq\n9bnEwVSs+hi6eyJJ6NLuR7IFimiPvcSviHwYMCGG6H6mHJQLTM24qWrbIPTevQTO\nMdbzxwIYohq/Q/7YCgLKYUFro+jjPoss0koUn5nrv7VJTq/O1kzyuhGUIVUgyZh6\nEz4XN0d7xCIePhXQ0oVXRRRAFFAXofmAVVOhRtZBIuKBwtOmgGE+ZKKEM/5gVe42\nj1Zb4kivHj4sRd+13L0Y1Z4a3kekRu3ML+Cmw1/npn7l07FCk+4NhWzjr6kNASrl\n2SiXixZNnqFdtAZ4v7HYBfrGtvTNhiBex/EAAG9V/D09MRD35EXuCyXgFaQSkcui\n5v7THnT3AgMBAAECggEAF+rPqTsVVgF1b6k/ZlygBrnP2ls8llhf70OJKD5YXMIQ\nOA+D8bFyY06B+Iwk4/AYKRkvaKhkf0YBNWTtaKxg9PCbmsJQfhLTqXop2q1vOpZ7\nlxX/A6Toc93OJz5YWOda4LIvHntQ9GeT+bYEc8ZbxER2wHQxMFTMGT4vo4iH5X4c\nVeuYzxQNCxecWSTDO7tEFioiURNdhTBgKXGv3W90RSBQDkQG00hkkhd8hcKA5zMr\n62xdQkXLi+1VkxU4ro9V5uf4PBEjH/Jiks+/X5XMLfKM9/Vyvm5Jb54uEghjF+I/\n2XHxONgzZml8Utny5/wnEUfd8hmU/uElNl5M+f0+QQKBgQD17vpWBNkmnMF9piDa\nu7ZWqGMPlKajCYWNxAKi+ZJmtGo/rrDO8a+qUgF1jnLRac7Qt0uAHFW0vtOQEyeA\nuMunBMgMMQJS4PnVVLMaSV776yTxD9J2WgegTcHbMRGtlcmiI73w6M0eR6e5zXWu\nMDesHf6TPvKvDz6owmhvG8A/0wKBgQDpFsU9lhtSor9UckQwfNZWBF7i+6HjXVPW\nlGuXnzEZsWSEik5enZXRvCXWJOKWWVUu+tfFhxkx+M9d/B2R04J7d/6nD18/5Zwp\nMtsT43y3EOT0rJX7DyzPM/i5eCb+EKEASi/v5bQvdgOp5bORhUuAc+2Wp0w+I5Na\nMNKzG1ijzQKBgQDxYbGLJA8OeuTesmOkzIDW5Ub1T+2OMBZJYo1D8Ljk3Uc7YfZf\n54+HGB4eh8XiDHvVF1KfVzA3yuRTkLlA+h/IukSu0pt5RR9xZ0SzFDiKAe2sPN9R\nEmRRzn/q52p2eYICBhqzjYtloOba0vIiGWlLIdVwKGSBtfDGKqneA9rZyQKBgQDC\nrXsFyiZ96WImFN3xJYMbCsF5kTOQI7XPRd1rINGwpOHQdXepPLMSHrP3XI1Hh8tG\n1sl6uDCJ9Ua1N8o2rtKPbxRo0cT7KDo6irhBr0HN4LVpye/mZbFGSiEWP01J6/ec\nt1m8Yz0QWuAKech15T+/RJQOvSJH0AzVSmvgnhl1jQKBgGWDGelKCOpMRdTpj6np\nv+qx3psBi/p2+aHVk4f9piC91ujd3k7Q5WgAve74cPehPA3KG3x2Ny1vcY9KkLu6\n2GMIbzOHM8DheEkev1UJliagPwOE0kc/76SO0Z3EEeQK2BkU82ZgyYX2J7BVQDAi\nsSOBc/DSLsGIzeDZFleUFyk+\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-n70c0@aquaobserver-49185.iam.gserviceaccount.com",
+  "client_id": "112809108033142597847",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-n70c0%40aquaobserver-49185.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
