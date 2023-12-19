@@ -5,7 +5,7 @@ import json
 url = "http://127.0.0.1:8000/readings/"
 
 # Input file with the generated data
-input_file = "mock_readings.json"
+input_file = "new_mock_readings.json"
 
 # Read data from the JSON file and send POST requests
 with open(input_file, 'r') as file:

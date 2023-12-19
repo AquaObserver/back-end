@@ -72,7 +72,9 @@ def readingsList(request, dayDate=None):
             return JsonResponse({"readings": serializer.data})
     # hardware is sending data
     if request.method == 'POST':
+        print("NOW:", datetime.datetime.now())
         serializer = ReadingSerializer(data=request.data)
+        #print("Serializer DATA: ", serializer)
         if serializer.is_valid():
             serializer.save()  # saves it to the DB
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -98,7 +100,7 @@ def getLatestDaily(request):
 def userThreshold(request):  # gets the application defined userThreshold
     if request.method == 'GET':
         try:
-            rData = UserThreshold.objects.get(id=3)
+            rData = UserThreshold.objects.get()
         except UserThreshold.DoesNotExist:
             return JsonResponse({"threshold": -1})
         return JsonResponse({"threshold": rData.thresholdLevel})
@@ -106,7 +108,7 @@ def userThreshold(request):  # gets the application defined userThreshold
     if request.method == 'POST':  # updates the application userThreshold
         newThrasholdValue = json.loads(request.body).get('thresholdLevel')
         try:
-            rData = UserThreshold.objects.get(id=3)
+            rData = UserThreshold.objects.get()
         except UserThreshold.DoesNotExist:
             return Response(status=status.HTTP_204_NO_CONTENT)
         rData.thresholdLevel = newThrasholdValue
