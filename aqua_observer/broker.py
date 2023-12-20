@@ -3,8 +3,10 @@ import paho.mqtt.client as mqtt
 from aqua_observer.apps.device_readings.models import DeviceReadings
 
 # MQTT broker details
-broker_address = "172.17.0.4"  # Replace with your server IP address
-broker_port = 1883  # Default port for MQTT protocol
+broker_address = "4.tcp.eu.ngrok.io"
+broker_port = 11825
+#username = "mosquitto-test-user1"
+#password = "$7$101$rOJe8HwYjM4qXvt5$aqmGjFQhX+2v+W4bjLJPvGq0T32Hg4CTVGo4zbuIkW4CDXRXx59Ne1GSeamzGTr80PEJPAsIOmyf9fFAiK8ekA=="
 
 
 # Callback functions
