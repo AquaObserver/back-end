@@ -95,8 +95,8 @@ def readingsList(request, dayDate=None):
                 return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             for d in serializer.data:
                 dData = dict(d.items())
-                extractedTime = dData.get('tstz').split('T')[1].split('+')[
-                    0]  # gets the time from string that represents DateTime object
+                extractedTime = dData.get('tstz').split('T')[1].split('+')[0]  # gets the time from string that represents DateTime object
+                print("EX time: ", extractedTime)
                 dataJSON["data"].append({"time": extractedTime, "waterLevel": dData.get('waterLevel')})
             return JsonResponse(dataJSON)
         else:
