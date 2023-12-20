@@ -72,6 +72,7 @@ def _send_notification_new_api(deviceToken: str, title: str = "Upozorenje", msg:
     response = requests.post(url, headers=headers, json=body)
     return response.json()
 
+@csrf_exempt
 def notifyDevices(request):
     getTokens = DeviceToken.objects.all()
     serializer = DeviceTokenSerializer(getTokens, many=True)
@@ -180,10 +181,17 @@ def registerDevice(request):
         print("QUERY: ", DeviceToken.objects.filter(Q(dToken=req_token)).query)
         doesExist = DeviceToken.objects.filter(Q(dToken=req_token))
         #print("BLBALABLLBA: ", doesExist[0].dToken)
-        if doesExist[0].dToken != req_token:
+        if doesExist.exists():
+          if doesExist[0].dToken != req_token:
+              tokenObject = DeviceToken.objects.create(dToken=req_token)
+              tokenObject.save()
+              return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
+          else:
+              return Response({"msg": "Token already exists"}, status=status.HTTP_302_FOUND)
+        else:
+            # The queryset is empty, create a new record
             tokenObject = DeviceToken.objects.create(dToken=req_token)
             tokenObject.save()
             return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"msg": "Token already exists"}, status=status.HTTP_409_CONFLICT)
+
 
