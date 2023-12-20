@@ -1,10 +1,14 @@
 import paho.mqtt.client as mqtt
+import os
 
 from aqua_observer.apps.device_readings.models import DeviceReadings
+from dotenv import load_dotenv
+
 
 # MQTT broker details
-broker_address = "4.tcp.eu.ngrok.io"
-broker_port = 11825
+load_dotenv()
+broker_address = os.getenv("BROKER_ADDRESS")
+broker_port = int(os.getenv("BROKER_PORT"))
 #username = "mosquitto-test-user1"
 #password = "$7$101$rOJe8HwYjM4qXvt5$aqmGjFQhX+2v+W4bjLJPvGq0T32Hg4CTVGo4zbuIkW4CDXRXx59Ne1GSeamzGTr80PEJPAsIOmyf9fFAiK8ekA=="
 
