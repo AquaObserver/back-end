@@ -6,6 +6,12 @@
 5) If there are problems with migrations run `"python manage.py migrate"` this should fix problems related to realocaing code or running it on another machine, if there are any
 6) Create a superuser by running `./createUser.sh`. This creates a superuser with **username: admin** and **password: admin123** for loging into the _/admin_ page. (If you are on linux give execution premission to the script with <br/>`chmod +x ./createUser.sh`)
 7) To visit the admin page for more visual representation of data in general and stored data in sqlite go to _/admin_, and login with **username: admin**, **password: admin123**
+8) In back-end folder create **.env** file with these lines:
+```
+export BROKER_ADDRESS = ""
+export BROKER_PORT = 
+export CLIENT_NAME = ""
+```
 
 # TODO
 For now we only have an API. Need to implement back-end for notifying user about water level reaching defined treshold.
