@@ -96,7 +96,6 @@ def readingsList(request, dayDate=None):
             for d in serializer.data:
                 dData = dict(d.items())
                 extractedTime = dData.get('tstz').split('T')[1].split('+')[0]  # gets the time from string that represents DateTime object
-                print("EX time: ", extractedTime)
                 dataJSON["data"].append({"time": extractedTime, "waterLevel": dData.get('waterLevel')})
             return JsonResponse(dataJSON)
         else:
