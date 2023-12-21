@@ -19,6 +19,7 @@ import google.auth.transport.requests
 from google.oauth2 import service_account
 
 # increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns all data for 2023-12-06 till 23:59:59)
+@csrf_exempt
 def fixDBDateInterpretation(date):
     tempStart = date.split(':')[0]
     tempEnd = date.split(':')[1] + 'T23:59:59'
@@ -28,6 +29,7 @@ def fixDBDateInterpretation(date):
 
 
 # MWLD = Mean Water Level per Day
+@csrf_exempt
 def calculateMWLD(serializedData):
     meanValue = dict()
     # populate dict with dates as keys and mean values of each day
@@ -44,6 +46,7 @@ def calculateMWLD(serializedData):
             meanValue[str(dateAsKey)] = tempValue / countedValues
     return meanValue
 
+@csrf_exempt
 def _get_access_token():
     credentials = service_account.Credentials.from_service_account_file('firebase_config.json',
         scopes=[
@@ -54,6 +57,7 @@ def _get_access_token():
     credentials.refresh(request)
     return credentials.token
 
+@csrf_exempt
 def _send_notification_new_api(deviceToken: str, title: str = "Upozorenje", msg: str = "Dosegnuta kritična razina"):
     token = _get_access_token()
     url = 'https://fcm.googleapis.com/v1/projects/aquaobserver-49185/messages:send'
@@ -127,6 +131,7 @@ def getLatestDaily(request):
 
 # defined userThreshold endpoint aka userThreshold/
 @api_view(['GET', 'POST'])
+@csrf_exempt
 def userThreshold(request):  # gets the application defined userThreshold
     if request.method == 'GET':
         try:
@@ -145,7 +150,7 @@ def userThreshold(request):  # gets the application defined userThreshold
         rData.save()
         return Response(rData.thresholdLevel, status=status.HTTP_200_OK)
 
-
+@csrf_exempt
 def readingsRange(request, dateRange):
     dataJSON = {"data": []}
     if (request.method == 'GET'):
@@ -161,7 +166,7 @@ def readingsRange(request, dateRange):
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
+@csrf_exempt
 def lastReading(request):
     if (request.method == 'GET'):
         try:
@@ -174,6 +179,7 @@ def lastReading(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
+@csrf_exempt
 def registerDevice(request):
     req_token = json.loads(request.body).get('token')
     if (request.method == "POST"):
