@@ -7,6 +7,7 @@ import os
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -19,7 +20,7 @@ import google.auth.transport.requests
 from google.oauth2 import service_account
 
 # increments dateEnd so that the last day is also captured in a range ie. 2023-12-04 - 2023-12-06 (returns all data for 2023-12-06 till 23:59:59)
-@csrf_exempt
+@csrf_protect
 def fixDBDateInterpretation(date):
     tempStart = date.split(':')[0]
     tempEnd = date.split(':')[1] + 'T23:59:59'
@@ -29,7 +30,7 @@ def fixDBDateInterpretation(date):
 
 
 # MWLD = Mean Water Level per Day
-@csrf_exempt
+@csrf_protect
 def calculateMWLD(serializedData):
     meanValue = dict()
     # populate dict with dates as keys and mean values of each day
@@ -46,7 +47,7 @@ def calculateMWLD(serializedData):
             meanValue[str(dateAsKey)] = tempValue / countedValues
     return meanValue
 
-@csrf_exempt
+@csrf_protect
 def _get_access_token():
     credentials = service_account.Credentials.from_service_account_file('firebase_config.json',
         scopes=[
@@ -57,7 +58,7 @@ def _get_access_token():
     credentials.refresh(request)
     return credentials.token
 
-@csrf_exempt
+@csrf_protect
 def _send_notification_new_api(deviceToken: str, title: str = "Upozorenje", msg: str = "Dosegnuta kritična razina"):
     token = _get_access_token()
     url = 'https://fcm.googleapis.com/v1/projects/aquaobserver-49185/messages:send'
@@ -76,7 +77,7 @@ def _send_notification_new_api(deviceToken: str, title: str = "Upozorenje", msg:
     response = requests.post(url, headers=headers, json=body)
     return response.json()
 
-@csrf_exempt
+@csrf_protect
 def notifyDevices():
     getTokens = DeviceToken.objects.all()
     serializer = DeviceTokenSerializer(getTokens, many=True)
@@ -85,6 +86,7 @@ def notifyDevices():
 
 # defined readings endpoint aka readings/
 @api_view(['GET', 'POST'])
+@csrf_protect
 def readingsList(request, dayDate=None):
     # front-end is retreiving data
     if request.method == 'GET':
@@ -115,7 +117,7 @@ def readingsList(request, dayDate=None):
 
 
 # define latest daily reading endpoint aka dailyLatest/
-@csrf_exempt
+@csrf_protect
 def getLatestDaily(request):
     if request.method == 'POST':
         requestedDate = json.loads(request.body).get('date')  # from JSON get value from filed "date":
@@ -131,7 +133,7 @@ def getLatestDaily(request):
 
 # defined userThreshold endpoint aka userThreshold/
 @api_view(['GET', 'POST'])
-@csrf_exempt
+@csrf_protect
 def userThreshold(request):  # gets the application defined userThreshold
     if request.method == 'GET':
         try:
@@ -150,7 +152,7 @@ def userThreshold(request):  # gets the application defined userThreshold
         rData.save()
         return Response(rData.thresholdLevel, status=status.HTTP_200_OK)
 
-@csrf_exempt
+@csrf_protect
 def readingsRange(request, dateRange):
     dataJSON = {"data": []}
     if (request.method == 'GET'):
@@ -166,7 +168,7 @@ def readingsRange(request, dateRange):
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
+@csrf_protect
 def lastReading(request):
     if (request.method == 'GET'):
         try:
@@ -179,7 +181,7 @@ def lastReading(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
-@csrf_exempt
+@csrf_protect
 def registerDevice(request):
     req_token = json.loads(request.body).get('token')
     if (request.method == "POST"):
