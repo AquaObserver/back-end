@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models.signals import post_save
@@ -6,9 +6,7 @@ from django.dispatch import receiver
 from pytz import timezone
 
 class DeviceReadings(models.Model):
-    time = datetime.datetime.now()
-    timeWithoutMilli = time.strftime("%Y-%m-%dT%H:%M:%S")
-    tstz = models.DateTimeField(default=timeWithoutMilli)
+    tstz = models.DateTimeField(default=datetime.now)
     deviceId = models.IntegerField()
     waterLevel = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
