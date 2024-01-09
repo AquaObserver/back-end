@@ -1,8 +1,6 @@
 # for defining endpoints
-
 import datetime
 import json
-import os
 
 from django.db.models import Q
 from django.http import JsonResponse
@@ -13,6 +11,8 @@ from rest_framework.response import Response
 
 from .models import DeviceReadings, UserThreshold, DeviceToken
 from .serializers import ReadingSerializer, DeviceTokenSerializer
+
+import aqua_observer.broker as br
 
 import requests
 import google.auth.transport.requests
@@ -187,3 +187,6 @@ def registerDevice(request):
             return Response({"msg": "Token added"}, status=status.HTTP_201_CREATED)
 
 
+def startCalibration(request):
+    br.calibrate()
+    return JsonResponse({"msg": "Calibration proccess started"})
